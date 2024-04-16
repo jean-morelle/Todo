@@ -1,0 +1,46 @@
+﻿
+﻿
+@page "/Todo"
+@rendermode InteractiveServer
+
+<h3>Todo List </h3>
+
+
+<input @bind="newTodoTitle" />
+<button @onclick="AddTodo">Ajouter</button>
+
+<ul>
+    @foreach (var todo in todoList)
+    {
+        <li>
+            <input type="checkbox" @bind="todo.IsDone" @onclick="@(() => ToggleTodoStatus(todo))" />
+            <span style="text-decoration: @((todo.IsDone ? "line-through" : "none"))">@todo.Title</span>
+            <button @onclick="@(() => RemoveTodo(todo))">Supprimer</button>
+        </li>
+    }
+</ul>
+
+@code {
+    List<TodoItem> todoList = new List<TodoItem>();
+    string newTodoTitle;
+
+    void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodoTitle))
+        {
+            todoList.Add(new TodoItem { Title = newTodoTitle });
+            newTodoTitle = string.Empty;
+        }
+    }
+
+    void RemoveTodo(TodoItem todo)
+    {
+        todoList.Remove(todo);
+    }
+
+    void ToggleTodoStatus(TodoItem todo)
+    {
+        todo.IsDone = !todo.IsDone;
+    }
+}
+
